@@ -35,9 +35,13 @@
     class TitleVariables extends React.Component {
         render() {
             return (
-                    <div>
-                        <span>{this.props.variables}</span>
+                <li className="calc__item">
+                    <div className="calc__container">
+                        <label>
+                            <span className="calc__value js-titleValue">{this.props.variables}</span>
+                        </label>
                     </div>
+                </li>
             )
         }
     }
@@ -46,7 +50,7 @@
         render() {
             var rows = [];
             this.props.variables.forEach(function (variables) {
-                rows.push(<TitleVariables variables={variables}/>);
+                rows.push(<TitleVariables variables={variables} key={variables}/>);
             });
             return <div>{rows}</div>;
         }
@@ -55,17 +59,17 @@
     class FilterablePrintVariables extends React.Component {
         render() {
             return (
-                    <div>
-                        <PrintVariables variables={this.props.variables}/>
-                    </div>
+                <div>
+                    <PrintVariables variables={this.props.variables}/>
+                </div>
             );
         }
     }
 
-    var SUM = [1, 2, 4, 6, 5];
+    var SUM = [2, 5, 4, 6, 3];
 
     ReactDOM.render(
-            <FilterablePrintVariables variables={SUM}/>,
+        <FilterablePrintVariables variables={SUM}/>,
         document.getElementById('js-calcForm')
     );
 </script>
