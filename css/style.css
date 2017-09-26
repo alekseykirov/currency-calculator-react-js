@@ -97,6 +97,10 @@ body {
     display: none;
 }
 
+.calc__item.active .calc__value{
+    display: none;
+}
+
 .calc__item.inactive .calc__container {
     padding: 5px 0 5px 36px;
 }
