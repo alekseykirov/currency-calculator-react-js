@@ -20,9 +20,9 @@
             <div class="calc__board-title">
                 <b>Сумма, р.</b>
             </div>
-            <ul class="calc__list" id="js-calcForm">
+            <div id="js-calcForm">
                 <!--code-->
-            </ul>
+            </div>
         </div>
         <div class="calc__footer ">
             <span>Итого:</span>
@@ -31,62 +31,42 @@
     </div>
 </div>
 <script type="text/babel">
-    class ProductRow extends React.Component {
+    class Field extends React.Component {
         constructor(props) {
             super(props);
-            this.state = {edit: false};
-        }
-
-        remove () {
-            console.log('Delete was pressed')
-        }
-
-        save () {
-            console.log('Save was pressed')
-        }
-
-        edit() {
-            console.log('Edit was pressed');
-            this.setState = ({edit: true});
-            console.log(this.state);
+            this.state = {active: false};
         }
 
         render() {
             return (
-                <li className="calc__item">
+                <li className="calc__item inactive">
                     <div className="calc__container">
                         <label>
-                            <span className="calc__value js-titleValue" onClick={this.edit}>{this.props.product}</span>
-                            <input type="number" className="calc__input js-calcInput"/>
-                            <button className="button button_save" onClick={this.save}>Сохранить</button>
-                            <a href="#" className="delete js-buttonDelete" onClick={this.remove} >Удалить</a>
+                            <span className="calc__value js-titleValue">{this.props.variable}</span>
+                            <a href="#" className="delete js-buttonDelete">Удалить</a>
                         </label>
                     </div>
                 </li>
             )
-        };
-    }
-
-    class ProductTable extends React.Component {
-        render() {
-            var rows = [];
-            this.props.products.forEach(function (product) {
-                rows.push(<ProductRow product={product}/>)
-            });
-            return <div>{rows}</div>
         }
     }
 
-    class App extends React.Component {
+    class Form extends React.Component {
         render() {
-            return <ProductTable products={this.props.products}/>
+            var sum = [];
+            this.props.variables.forEach(function (variable) {
+                sum.push(<Field variable={variable}/>)
+            });
+            return (
+                    <ul className="calc__list">{sum}</ul>
+            )
         }
     }
 
     var VARIABLES = [3, 4, 6];
 
     ReactDOM.render(
-            <App products={VARIABLES}/>,
+            <Form variables={VARIABLES}/>,
         document.getElementById('js-calcForm')
     )
 </script>

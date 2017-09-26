@@ -27,8 +27,8 @@ body {
 }
 
 .delete {
-    /*display: none;*/
-    display: block;
+    display: none;
+    /*display: block;*/
     position: absolute;
     top: 4px;
     right: -68px;
@@ -90,11 +90,11 @@ body {
 }
 
 .calc__item.inactive input{
-    /*display: none;*/
+    display: none;
 }
 
 .calc__item.inactive .button_save{
-    /*display: none;*/
+    display: none;
 }
 
 .calc__item.inactive .calc__container {
@@ -120,5 +120,5 @@ body {
 }
 
 .calc__item.inactive .calc__container:hover .delete{
-    /*display: block;*/
+    display: block;
 }
