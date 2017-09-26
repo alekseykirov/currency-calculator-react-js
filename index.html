@@ -32,13 +32,34 @@
 </div>
 <script type="text/babel">
     class ProductRow extends React.Component {
+        constructor(props) {
+            super(props);
+            this.state = {edit: false};
+        }
+
+        remove () {
+            console.log('Delete was pressed')
+        }
+
+        save () {
+            console.log('Save was pressed')
+        }
+
+        edit() {
+            console.log('Edit was pressed');
+            this.setState = ({edit: true});
+            console.log(this.state);
+        }
+
         render() {
             return (
-                <li className="calc__item inactive">
+                <li className="calc__item">
                     <div className="calc__container">
                         <label>
-                            <span className="calc__value js-titleValue">{this.props.product}</span>
-                            <a href="#" className="delete js-buttonDelete">Удалить</a>
+                            <span className="calc__value js-titleValue" onClick={this.edit}>{this.props.product}</span>
+                            <input type="number" className="calc__input js-calcInput"/>
+                            <button className="button button_save" onClick={this.save}>Сохранить</button>
+                            <a href="#" className="delete js-buttonDelete" onClick={this.remove} >Удалить</a>
                         </label>
                     </div>
                 </li>
