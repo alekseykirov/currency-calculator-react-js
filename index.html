@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <title>Calculator ReactJS</title>
     <link rel="stylesheet" href="css/style.css">
-    <script src="https://unpkg.com/react@latest/dist/react.js"></script>
-    <script src="https://unpkg.com/react-dom@latest/dist/react-dom.js"></script>
+    <script src="https://unpkg.com/react@15.3.1/dist/react.min.js"></script>
+    <script src="https://unpkg.com/react-dom@15.3.1/dist/react-dom.min.js"></script>
     <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
 </head>
 <body>
@@ -31,35 +31,102 @@
     </div>
 </div>
 <script type="text/babel">
-    var Form = React.createClass ({
-        getInitialState: function() {
+    var Form = React.createClass({
+        getInitialState: function () {
             return ({
-                value: [3, 7, 5],
+                activity: false
             })
         },
 
-        handleRemove: function(index) {
-            let arr = this.state.value;
-            arr.splice(index, 1);
-            this.setState ({value: arr});
+        save() {
+            var value = this.refs.newTxt.value;
+            this.props.edit(+value, this.props.index)
+            this.setState({activity: !this.state.activity})
         },
 
-        render: function() {
-            var sum = [];
-            this.state.value.forEach(function (value, index) {
-                sum.push(
-                    <span className="calc__value js-titleValue" onClick={() => {this.handleRemove(index)}}>{value}</span>
+        edit: function () {
+            this.setState({activity: !this.state.activity});
+        },
 
-                )
-            });
+        remove: function () {
+            this.props.remove(this.props.index);
+        },
+
+        renderActive: function () {
             return (
-                <ul className="calc__list">{sum}</ul>
+                <li className="calc__item active">
+                    <div className="calc__container">
+                        <label>
+                            <input ref="newTxt" type="number" className="calc__input js-fieldValue"/>
+                            <button className="button button_save js-buttonSave" onClick={this.save}>Сохранить
+                            </button>
+                        </label>
+                    </div>
+                </li>
+            )
+        },
+
+        renderInactive: function () {
+            return (
+                <li className="calc__item inactive">
+                    <div className="calc__container">
+                        <label>
+                            <span className="calc__value js-titleValue"
+                                  onClick={this.edit}>{this.props.children}</span>
+                            <a href="#" className="delete js-buttonDelete" onClick={this.remove}>Удалить</a>
+                        </label>
+                    </div>
+                </li>
+            )
+        },
+
+        render: function () {
+            if (this.state.activity) {
+                return <ul className="calc__list">{this.renderActive()}</ul>
+            } else {
+                return <ul className="calc__list">{this.renderInactive()}</ul>
+            }
+        }
+    });
+
+    var Field = React.createClass({
+        getInitialState: function () {
+            return ({
+                value: [1, 4, 5],
+            })
+        },
+
+        removeValue: function (index) {
+            var arr = this.state.value;
+            arr.splice(index, 1);
+            this.setState({value: arr});
+        },
+
+        addValue: function (value, index) {
+            var arr = this.state.value;
+            arr[index] = value;
+            this.setState({value: arr});
+        },
+
+        eachValue: function (value, index) {
+            return (
+                <Form key={index} index={index} remove={this.removeValue} edit={this.addValue}>
+                    {value}
+                </Form>
+            )
+        },
+
+        render: function () {
+            return (
+                <div>
+                    {this.state.value.map(this.eachValue)}
+                </div>
             )
         }
     });
 
     ReactDOM.render(
-        <Form/>,
+            <Field />,
         document.getElementById('js-calcForm')
     )
 </script>
@@ -67,68 +134,77 @@
 </html>
 
 
+<!--render: function() {-->
+<!--var sum = [];-->
+<!--this.state.value.forEach(function (value, index) {-->
+<!--sum.push(-->
+<!--<span className="calc__value js-titleValue" onClick={() => {this.handleRemove(index)}}>{value}</span>-->
+
+<!--)-->
+<!--});-->
+<!--return (-->
+<!--<ul className="calc__list">{sum}</ul>-->
+<!--)-->
+<!--}-->
 
 
+<!--class Field extends React.Component {-->
+<!--save( index ) {-->
+<!--//            var value = this.refs.newTxt.value;-->
+<!--}-->
 
+<!--remove( index ) {-->
+<!--//            this.props.removeValue(index);-->
+<!--}-->
 
+<!--//        edit( index ) {-->
+<!--//            let newActivityArr = this.state.activityArr;-->
+<!--//            newActivityArr[index] = !newActivityArr[index];-->
+<!--//            this.setState({activityArr: newActivityArr});-->
+<!--//        }-->
 
-class Field extends React.Component {
-save( index ) {
-//            var value = this.refs.newTxt.value;
-}
+<!--render() {-->
+<!--let index = this.props.index;-->
+<!--return (-->
+<!--<li>-->
+<!--<div className="calc__container">-->
+<!--<label>-->
+<!--<span className="calc__value js-titleValue" onClick={() => {this.edit(index)}}>-->
+<!--{this.props.value}-->
+<!--</span>-->
+<!--<input ref="newTxt" type="number" className="calc__input js-fieldValue" />-->
+<!--<button className="button button_save js-buttonSave" onClick={() => {this.save(index)}}>Сохранить</button>-->
+<!--<a href="#" className="delete js-buttonDelete" onClick={() => {this.remove(index)}}>Удалить</a>-->
+<!--</label>-->
+<!--</div>-->
+<!--</li>-->
+<!--)-->
+<!--}-->
+<!--}-->
 
-remove( index ) {
-//            this.props.removeValue(index);
-}
+<!--class Form extends React.Component {-->
+<!--constructor(props) {-->
+<!--super(props);-->
+<!--this.state = {-->
+<!--activityArr: [false],-->
+<!--value: [5, 4, 7],-->
+<!--};-->
+<!--//            this.edit = this.edit.bind(this);-->
+<!--}-->
 
-//        edit( index ) {
-//            let newActivityArr = this.state.activityArr;
-//            newActivityArr[index] = !newActivityArr[index];
-//            this.setState({activityArr: newActivityArr});
-//        }
+<!--removeValue( index ) {-->
+<!--var arr = this.state.value;-->
+<!--arr.splice(index, 1);-->
+<!--this.setState({value: arr});-->
+<!--}-->
 
-render() {
-let index = this.props.index;
-return (
-<li>
-    <div className="calc__container">
-        <label>
-            <span className="calc__value js-titleValue" onClick={() => {this.edit(index)}}>
-            {this.props.value}
-            </span>
-            <input ref="newTxt" type="number" className="calc__input js-fieldValue" />
-            <button className="button button_save js-buttonSave" onClick={() => {this.save(index)}}>Сохранить</button>
-            <a href="#" className="delete js-buttonDelete" onClick={() => {this.remove(index)}}>Удалить</a>
-        </label>
-    </div>
-</li>
-)
-}
-}
-
-class Form extends React.Component {
-constructor(props) {
-super(props);
-this.state = {
-activityArr: [false],
-value: [5, 4, 7],
-};
-//            this.edit = this.edit.bind(this);
-}
-
-removeValue( index ) {
-var arr = this.state.value;
-arr.splice(index, 1);
-this.setState({value: arr});
-}
-
-render() {
-var sum = [];
-this.state.value.forEach(function (value, index) {
-sum.push(<Field value={value} index={index} key={index} />)
-});
-return (
-<ul className="calc__list">{sum}</ul>
-)
-}
-}
+<!--render() {-->
+<!--var sum = [];-->
+<!--this.state.value.forEach(function (value, index) {-->
+<!--sum.push(<Field value={value} index={index} key={index} />)-->
+<!--});-->
+<!--return (-->
+<!--<ul className="calc__list">{sum}</ul>-->
+<!--)-->
+<!--}-->
+<!--}-->
