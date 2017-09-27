@@ -10,63 +10,46 @@
 </head>
 <body>
 <div class="wrapper">
-    <div class="calc">
-        <div class="calc__header">
-            <button class="button js-buttonAdd">
-                Добавить строчку
-            </button>
-        </div>
-        <div class="calc__board">
-            <div class="calc__board-title">
-                <b>Сумма, р.</b>
-            </div>
-            <div id="js-calcForm">
-                <!--code-->
-            </div>
-        </div>
-        <div class="calc__footer ">
-            <span>Итого:</span>
-            <b class="calc__amount js-calc__amount">0</b>
-        </div>
+    <div class="calc" id="calc">
+       <!--React JS-->
     </div>
 </div>
 <script type="text/babel">
-    var Form = React.createClass({
-        getInitialState: function () {
+    var Fields = React.createClass({
+        getInitialState() {
             return ({
-                activity: false
+                activity: true
             })
         },
 
         save() {
             var value = this.refs.newTxt.value;
-            this.props.edit(+value, this.props.index)
+            this.props.edit(+value, this.props.index);
             this.setState({activity: !this.state.activity})
         },
 
-        edit: function () {
+        edit() {
             this.setState({activity: !this.state.activity});
         },
 
-        remove: function () {
+        remove() {
             this.props.remove(this.props.index);
         },
 
-        renderActive: function () {
+        renderActive() {
             return (
                 <li className="calc__item active">
                     <div className="calc__container">
                         <label>
                             <input ref="newTxt" type="number" className="calc__input js-fieldValue"/>
-                            <button className="button button_save js-buttonSave" onClick={this.save}>Сохранить
-                            </button>
+                            <button className="button button_save js-buttonSave" onClick={this.save}>Сохранить</button>
                         </label>
                     </div>
                 </li>
             )
         },
 
-        renderInactive: function () {
+        renderInactive() {
             return (
                 <li className="calc__item inactive">
                     <div className="calc__container">
@@ -80,131 +63,96 @@
             )
         },
 
-        render: function () {
+        render() {
             if (this.state.activity) {
-                return <ul className="calc__list">{this.renderActive()}</ul>
+                return this.renderActive()
             } else {
-                return <ul className="calc__list">{this.renderInactive()}</ul>
+                return this.renderInactive()
             }
         }
     });
 
-    var Field = React.createClass({
-        getInitialState: function () {
+    var Form = React.createClass({
+        getInitialState() {
             return ({
-                value: [1, 4, 5],
+                value: [],
             })
         },
 
-        removeValue: function (index) {
+        addValue(value) {
+            var arr = this.state.value;
+            arr.push(value);
+            this.setState({value: arr});
+        },
+
+        removeValue(index) {
             var arr = this.state.value;
             arr.splice(index, 1);
             this.setState({value: arr});
         },
 
-        addValue: function (value, index) {
+        editValue(value, index) {
             var arr = this.state.value;
             arr[index] = value;
             this.setState({value: arr});
         },
 
-        eachValue: function (value, index) {
+        addTemplate(value) {
+            var arr = this.state.value;
+            arr.push(value);
+            this.setState({value: arr});
+        },
+
+        calcTotal(){
+            var arr = this.state.value;
+            var result = 0;
+            for (var i = 0; i < arr.length; i++) {
+                result += arr[i];
+            }
+            return result;
+        },
+
+        eachValue(value, index) {
             return (
-                <Form key={index} index={index} remove={this.removeValue} edit={this.addValue}>
+                <Fields key={index} index={index} remove={this.removeValue} edit={this.editValue} add={this.addValue}>
                     {value}
-                </Form>
+                </Fields>
             )
         },
 
-        render: function () {
+        render() {
             return (
                 <div>
-                    {this.state.value.map(this.eachValue)}
+                    <div className="calc__header">
+                        <button className="button js-buttonAdd" onClick={this.addTemplate.bind(null, 0)}>
+                            Добавить строчку
+                        </button>
+                    </div>
+                    <div className="calc__board">
+                        <div className="calc__board-title">
+                            <b>Сумма, р.</b>
+                        </div>
+                        <div id="js-calcForm">
+                            <ul className="calc__list">
+                                {this.state.value.map(this.eachValue)}
+                            </ul>
+                        </div>
+                    </div>
+                    <div className="calc__footer ">
+                        <span>Итого:</span>
+                        <b className="calc__amount js-calc__amount">
+                            {this.calcTotal()}
+                        </b>
+                    </div>
                 </div>
             )
         }
     });
 
     ReactDOM.render(
-            <Field />,
-        document.getElementById('js-calcForm')
+            <Form />,
+        document.getElementById('calc')
     )
 </script>
 </body>
 </html>
-
-
-<!--render: function() {-->
-<!--var sum = [];-->
-<!--this.state.value.forEach(function (value, index) {-->
-<!--sum.push(-->
-<!--<span className="calc__value js-titleValue" onClick={() => {this.handleRemove(index)}}>{value}</span>-->
-
-<!--)-->
-<!--});-->
-<!--return (-->
-<!--<ul className="calc__list">{sum}</ul>-->
-<!--)-->
-<!--}-->
-
-
-<!--class Field extends React.Component {-->
-<!--save( index ) {-->
-<!--//            var value = this.refs.newTxt.value;-->
-<!--}-->
-
-<!--remove( index ) {-->
-<!--//            this.props.removeValue(index);-->
-<!--}-->
-
-<!--//        edit( index ) {-->
-<!--//            let newActivityArr = this.state.activityArr;-->
-<!--//            newActivityArr[index] = !newActivityArr[index];-->
-<!--//            this.setState({activityArr: newActivityArr});-->
-<!--//        }-->
-
-<!--render() {-->
-<!--let index = this.props.index;-->
-<!--return (-->
-<!--<li>-->
-<!--<div className="calc__container">-->
-<!--<label>-->
-<!--<span className="calc__value js-titleValue" onClick={() => {this.edit(index)}}>-->
-<!--{this.props.value}-->
-<!--</span>-->
-<!--<input ref="newTxt" type="number" className="calc__input js-fieldValue" />-->
-<!--<button className="button button_save js-buttonSave" onClick={() => {this.save(index)}}>Сохранить</button>-->
-<!--<a href="#" className="delete js-buttonDelete" onClick={() => {this.remove(index)}}>Удалить</a>-->
-<!--</label>-->
-<!--</div>-->
-<!--</li>-->
-<!--)-->
-<!--}-->
-<!--}-->
-
-<!--class Form extends React.Component {-->
-<!--constructor(props) {-->
-<!--super(props);-->
-<!--this.state = {-->
-<!--activityArr: [false],-->
-<!--value: [5, 4, 7],-->
-<!--};-->
-<!--//            this.edit = this.edit.bind(this);-->
-<!--}-->
-
-<!--removeValue( index ) {-->
-<!--var arr = this.state.value;-->
-<!--arr.splice(index, 1);-->
-<!--this.setState({value: arr});-->
-<!--}-->
-
-<!--render() {-->
-<!--var sum = [];-->
-<!--this.state.value.forEach(function (value, index) {-->
-<!--sum.push(<Field value={value} index={index} key={index} />)-->
-<!--});-->
-<!--return (-->
-<!--<ul className="calc__list">{sum}</ul>-->
-<!--)-->
-<!--}-->
-<!--}-->
