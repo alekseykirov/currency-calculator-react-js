@@ -11,19 +11,24 @@
 <body>
 <div class="wrapper">
     <div class="calc" id="calc">
-       <!--React JS-->
+        <!--React JS-->
     </div>
 </div>
 <script type="text/babel">
     var Fields = React.createClass({
         getInitialState() {
             return ({
-                activity: true
+                activity: true,
+                myValue: []
             })
         },
 
+        changeInput(e) {
+            this.setState({myValue: e.target.value});
+        },
+
         save() {
-            var value = this.refs.newTxt.value;
+            var value = this.state.myValue;
             this.props.edit(+value, this.props.index);
             this.setState({activity: !this.state.activity})
         },
@@ -38,28 +43,30 @@
 
         renderActive() {
             return (
-                <li className="calc__item active">
-                    <div className="calc__container">
-                        <label>
-                            <input ref="newTxt" type="number" className="calc__input js-fieldValue"/>
-                            <button className="button button_save js-buttonSave" onClick={this.save}>Сохранить</button>
-                        </label>
-                    </div>
-                </li>
+                    <li className="calc__item active">
+                        <div className="calc__container">
+                            <label>
+                                <input onChange={this.changeInput} value={this.state.myValue} type="number"
+                                       className="calc__input js-fieldValue"/>
+                                <button className="button button_save js-buttonSave" onClick={this.save}>Сохранить
+                                </button>
+                            </label>
+                        </div>
+                    </li>
             )
         },
 
         renderInactive() {
             return (
-                <li className="calc__item inactive">
-                    <div className="calc__container">
-                        <label>
+                    <li className="calc__item inactive">
+                        <div className="calc__container">
+                            <label>
                             <span className="calc__value js-titleValue"
                                   onClick={this.edit}>{this.props.children}</span>
-                            <a href="#" className="delete js-buttonDelete" onClick={this.remove}>Удалить</a>
-                        </label>
-                    </div>
-                </li>
+                                <a href="#" className="delete js-buttonDelete" onClick={this.remove}>Удалить</a>
+                            </label>
+                        </div>
+                    </li>
             )
         },
 
@@ -103,7 +110,7 @@
             this.setState({value: arr});
         },
 
-        calcTotal(){
+        calcTotal() {
             var arr = this.state.value;
             var result = 0;
             for (var i = 0; i < arr.length; i++) {
@@ -114,43 +121,44 @@
 
         eachValue(value, index) {
             return (
-                <Fields key={index} index={index} remove={this.removeValue} edit={this.editValue} add={this.addValue}>
-                    {value}
-                </Fields>
+                    <Fields key={index} index={index} remove={this.removeValue} edit={this.editValue}
+                            add={this.addValue}>
+                        {value}
+                    </Fields>
             )
         },
 
         render() {
             return (
-                <div>
-                    <div className="calc__header">
-                        <button className="button js-buttonAdd" onClick={this.addTemplate.bind(null, 0)}>
-                            Добавить строчку
-                        </button>
-                    </div>
-                    <div className="calc__board">
-                        <div className="calc__board-title">
-                            <b>Сумма, р.</b>
+                    <div>
+                        <div className="calc__header">
+                            <button className="button js-buttonAdd" onClick={this.addTemplate.bind(null, 0)}>
+                                Добавить строчку
+                            </button>
                         </div>
-                        <div id="js-calcForm">
-                            <ul className="calc__list">
-                                {this.state.value.map(this.eachValue)}
-                            </ul>
+                        <div className="calc__board">
+                            <div className="calc__board-title">
+                                <b>Сумма, р.</b>
+                            </div>
+                            <div id="js-calcForm">
+                                <ul className="calc__list">
+                                    {this.state.value.map(this.eachValue)}
+                                </ul>
+                            </div>
+                        </div>
+                        <div className="calc__footer ">
+                            <span>Итого:</span>
+                            <b className="calc__amount js-calc__amount">
+                                {this.calcTotal()}
+                            </b>
                         </div>
                     </div>
-                    <div className="calc__footer ">
-                        <span>Итого:</span>
-                        <b className="calc__amount js-calc__amount">
-                            {this.calcTotal()}
-                        </b>
-                    </div>
-                </div>
             )
         }
     });
 
     ReactDOM.render(
-            <Form />,
+            <Form/>,
         document.getElementById('calc')
     )
 </script>
