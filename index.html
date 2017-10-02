@@ -19,16 +19,16 @@
         getInitialState() {
             return ({
                 activity: true,
-                myValue: []
+                value: []
             })
         },
 
         changeInput(e) {
-            this.setState({myValue: e.target.value});
+            this.setState({value: e.target.value});
         },
 
         save() {
-            var value = this.state.myValue;
+            var value = this.state.value;
             this.props.edit(+value, this.props.index);
             this.setState({activity: !this.state.activity})
         },
@@ -46,7 +46,7 @@
                     <li className="calc__item active">
                         <div className="calc__container">
                             <label>
-                                <input onChange={this.changeInput} value={this.state.myValue} type="number"
+                                <input onChange={this.changeInput} value={this.state.value} type="number"
                                        className="calc__input js-fieldValue"/>
                                 <button className="button button_save js-buttonSave" onClick={this.save}>Сохранить
                                 </button>
